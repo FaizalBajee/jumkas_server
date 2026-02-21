@@ -32,7 +32,7 @@ app.use("/auth", authRouter);
 app.use("/products", productsRouter);
 
 app.use("", (req, res) => {
-  res.json("404 Not Found");
+  res.json("404 Not Found-");
 });
 
 app.listen(8010, () => {

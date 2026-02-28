@@ -13,9 +13,18 @@ app.use("/uploads", express.static("uploads"));
 
 app.get("/test", (req, res) => {
   res.json("Welcome to Jumkas API");
-})
+});
 
-const url = "mongodb://localhost:27017";
+// const url = "mongodb://localhost:27017";
+const url =
+  "mongodb+srv://faizalintech_db_user:faizal%40gmail.com1@cluster0.xcmw8wi.mongodb.net/";
+
+// ✅ Fix example
+// If password is:
+// My@Pass#123
+// Use:
+// My%40Pass%23123
+
 const dbName = "jumkasDB";
 
 MongoClient.connect(url)
@@ -27,10 +36,8 @@ MongoClient.connect(url)
     console.log(`❌ connection failed : ${err}`);
   });
 
-
 app.use("/auth", authRouter);
 app.use("/products", productsRouter);
-
 
 app.use("", (req, res) => {
   res.json("404 Not Found-");

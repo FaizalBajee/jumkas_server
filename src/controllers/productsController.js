@@ -8,7 +8,9 @@ async function addProducts(req, res) {
     const { name, description, price } = req.body;
 
     if (!name || !price) {
-      return res.status(400).json({ success: false, message: "Missing fields" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing fields" });
     }
 
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
@@ -34,5 +36,24 @@ async function addProducts(req, res) {
   }
 }
 
-module.exports = { addProducts };
+async function getProducts(req, res) {
+  console.log("getting product")
+  try {
+    const db = req.app.locals.db;
 
+    const products = await db.collection("products").find().toArray();
+
+    res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      data: products
+    });
+
+  } catch (error) {
+    console.error("❌ Error fetching products:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+}
+
+
+module.exports = { addProducts, getProducts };

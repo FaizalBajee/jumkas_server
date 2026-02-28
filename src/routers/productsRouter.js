@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 
-const { addProducts } = require("../controllers/productsController");
+const { addProducts ,getProducts } = require("../controllers/productsController");
 const validateToken = require("../middleware/validateToken");
 
 // Configure multer storage
@@ -19,5 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post("/AddProduct", validateToken, upload.single("image"), addProducts);
+router.get("/GetProducts",  getProducts); 
+
 
 module.exports = router;

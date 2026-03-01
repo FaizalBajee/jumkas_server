@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-require('dotenv').config();
+require("dotenv").config();
 const { MongoClient } = require("mongodb");
 const authRouter = require("./src/routers/authRouter");
 const productsRouter = require("./src/routers/productsRouter");
@@ -13,7 +13,7 @@ app.use(
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 app.use(express.json());
@@ -26,26 +26,32 @@ app.get("/test", (req, res) => {
 
 // const url = "mongodb://localhost:27017";
 
-console.log("MONGO_URI:", process.env.MONGO_URI);
+// ✅ Proper startup sequence
+async function startServer() {
+  try {
+    const client = await MongoClient.connect(process.env.MONGO_URI);
 
-
-const dbName = "jumkasDB";
-
-MongoClient.connect(process.env.MONGO_URI)
-  .then((client) => {
     console.log("✅ connected to mongodb");
+
     app.locals.db = client.db(dbName);
-  })
-  .catch((err) => {
-    console.log(`❌ connection failed : ${err}`);
-  });
 
-app.use("/auth", authRouter);
-app.use("/products", productsRouter);
+    app.use("/auth", authRouter);
+    app.use("/products", productsRouter);
 
-app.use("", (req, res) => {
-  res.json("404 Not Found-");
-});
+    app.use("", (req, res) => {
+      res.json("404 Not Found-");
+    });
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Running on ${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ connection failed:", err);
+    process.exit(1); // 🔥 important in production
+  }
+}
+
+startServer();
 
 app.listen(8010, () => {
   console.log("Running...");

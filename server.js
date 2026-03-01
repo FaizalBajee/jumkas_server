@@ -1,14 +1,23 @@
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config();
 const { MongoClient } = require("mongodb");
 const authRouter = require("./src/routers/authRouter");
 const productsRouter = require("./src/routers/productsRouter");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: true, // reflect request origin (allows all)
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
 app.get("/test", (req, res) => {
@@ -16,18 +25,13 @@ app.get("/test", (req, res) => {
 });
 
 // const url = "mongodb://localhost:27017";
-const url =
-  "mongodb+srv://faizalintech_db_user:faizal%40gmail.com1@cluster0.xcmw8wi.mongodb.net/";
 
-// ✅ Fix example
-// If password is:
-// My@Pass#123
-// Use:
-// My%40Pass%23123
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
 
 const dbName = "jumkasDB";
 
-MongoClient.connect(url)
+MongoClient.connect(process.env.MONGO_URI)
   .then((client) => {
     console.log("✅ connected to mongodb");
     app.locals.db = client.db(dbName);

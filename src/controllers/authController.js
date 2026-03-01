@@ -43,7 +43,7 @@ async function authRegister(req, res) {
     res.json(
       responseController.success("User registered successfully", {
         id: result.insertedId,
-      })
+      }),
     );
   } catch (err) {
     console.log("error handling :" + err);
@@ -93,13 +93,15 @@ async function authLogin(req, res) {
           firstName: login.firstName,
           lastName: login.lastName,
         },
-      })
+      }),
     );
-  } catch (err) {
-    console.error("Error during login:", err);
-    return res
-      .status(500)
-      .json(responseController.failed("Internal server error", err));
+  } catch (error) {
+    console.error("LOGIN ERROR:1", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 }
 

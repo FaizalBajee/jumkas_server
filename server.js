@@ -21,23 +21,30 @@ app.use(helmet());
 app.use(compression());
 
 
-const allowedOrigins = true
-// [
-//   "http://localhost:5173",
-//   "http://3.107.253.64:5173",
-// ];
+const allowedOrigins =
+  [
+    "http://localhost:5173",
+    "http://3.107.253.64:5173",
+  ];
 
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         return callback(null, true);
+//       }
+//       return callback(new Error("Not allowed by CORS"));
+//     },
+//     credentials: true,
+//   })
+// );
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
+    origin: true,
     credentials: true,
   })
 );
+
 
 
 app.use(express.json({ limit: "10mb" }));

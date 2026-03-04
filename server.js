@@ -53,7 +53,7 @@ app.use("/uploads", express.static("uploads"));
 
 
 app.get("/test", (req, res) => {
-  res.json({ success: true, message: "Welcome to Jumkas API" });
+  res.status(200).json({ success: true, message: "Welcome to Jumkas API" });
 });
 
 
